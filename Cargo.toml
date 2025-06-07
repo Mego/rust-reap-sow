@@ -1,0 +1,7 @@
+[package]
+name = "reap-sow"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+reap-sow-macros = { path = "reap-sow-macros" }
