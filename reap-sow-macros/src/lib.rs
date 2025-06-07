@@ -1,7 +1,7 @@
 use proc_macro::TokenStream;
 use quote::quote;
 use syn::{
-    Expr, PathSegment, parse_macro_input, parse_quote,
+    Expr, parse_macro_input, parse_quote,
     visit_mut::{VisitMut, visit_expr_mut},
 };
 
@@ -12,12 +12,8 @@ impl VisitMut for Sow {
         if let Expr::Call(expr) = &node {
             let arg = expr.args.first().unwrap();
             if let Expr::Path(p) = &*expr.func {
-                if p.path.segments.len() == 1 {
-                    if let Some(PathSegment { ident, .. }) = p.path.segments.first() {
-                        if ident.span().source_text().is_some_and(|s| s == "sow") {
-                            *node = parse_quote!({ field.push(#arg); #arg });
-                        }
-                    }
+                if p.path.is_ident("sow") {
+                    *node = parse_quote!({ field.push(#arg); #arg });
                 }
             }
         }
