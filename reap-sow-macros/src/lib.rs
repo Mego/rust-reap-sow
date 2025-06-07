@@ -12,9 +12,11 @@ impl VisitMut for Sow {
         if let Expr::Call(expr) = &node {
             let arg = expr.args.first().unwrap();
             if let Expr::Path(p) = &*expr.func {
-                if let Some(PathSegment { ident, .. }) = p.path.segments.first() {
-                    if ident.span().source_text().is_some_and(|s| s == "sow") {
-                        *node = parse_quote!({ field.push(#arg); #arg });
+                if p.path.segments.len() == 1 {
+                    if let Some(PathSegment { ident, .. }) = p.path.segments.first() {
+                        if ident.span().source_text().is_some_and(|s| s == "sow") {
+                            *node = parse_quote!({ field.push(#arg); #arg });
+                        }
                     }
                 }
             }
